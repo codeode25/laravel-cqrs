@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Query\GetLatestPostsWithUserQuery;
+use App\Query\Handlers\GetLatestPostsWithUserHandler;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(GetLatestPostsWithUserHandler $handler)
     {
-        $posts = Post::with('user:id,name')
-            ->latest()
-            ->take(10)
-            ->get(['id', 'title', 'body', 'user_id', 'created_at']);
+        $posts = $handler->handle(new GetLatestPostsWithUserQuery(10));
 
         return response()->json(['posts' => $posts], 200);
     }
