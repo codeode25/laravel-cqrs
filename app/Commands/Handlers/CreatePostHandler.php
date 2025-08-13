@@ -4,6 +4,8 @@ namespace App\Commands\Handlers;
 
 use App\Models\Post;
 use App\Commands\CreatePostCommand;
+use Illuminate\Support\Facades\Cache;
+use App\Query\GetLatestPostsWithUserQuery;
 
 class CreatePostHandler
 {
@@ -18,6 +20,8 @@ class CreatePostHandler
             'body'  => $command->body,
             'user_id' => $command->userId
         ]);
+
+        Cache::forget(GetLatestPostsWithUserQuery::CACHE_KEY);
 
         return $post;
     }
