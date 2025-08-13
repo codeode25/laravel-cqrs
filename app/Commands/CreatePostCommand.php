@@ -2,7 +2,9 @@
 
 namespace App\Commands;
 
-class CreatePostCommand
+use App\CQRS\CommandInterface;
+
+class CreatePostCommand implements CommandInterface
 {
     public function __construct(
         public readonly string $title,
