@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\CQRS\QueryBusInterface;
 use App\CQRS\CommandBusInterface;
 use App\Commands\CreatePostCommand;
 use App\Query\GetLatestPostsWithUserQuery;
@@ -13,12 +14,13 @@ use App\Query\Handlers\GetLatestPostsWithUserHandler;
 class PostController extends Controller
 {
     public function __construct(
-        private readonly CommandBusInterface $commandBus
+        private readonly CommandBusInterface $commandBus,
+        private readonly QueryBusInterface $queryBus
     ) {}
 
-    public function index(GetLatestPostsWithUserHandler $handler)
+    public function index()
     {
-        $posts = $handler->handle(new GetLatestPostsWithUserQuery(10));
+        $posts = $this->queryBus->ask(new GetLatestPostsWithUserQuery(10));
 
         return response()->json(['posts' => $posts], 200);
     }
