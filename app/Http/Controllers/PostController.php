@@ -9,7 +9,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('user:id,name,avatar')
+        $posts = Post::with('user:id,name')
             ->latest()
             ->take(10)
             ->get(['id', 'title', 'body', 'user_id', 'created_at']);
